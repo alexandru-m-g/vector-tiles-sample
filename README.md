@@ -4,6 +4,8 @@
 There are some sample database users that are being created by the steps below 
 with passwords that are hardcoded in this repo!**
 
+This is a geopreview sample stack based on the one used in [HDX](https://data.humdata.org/)
+
 ## Requirements
 * docker - tested on version *20.10* , should work with *>17.04*
 * docker-compose - tested on version *1.25.5* , should work with *>1.11.2*
@@ -14,8 +16,11 @@ NOTE: this was tested with Docker for Linux and Mac.
 This will create a total of 3 containers.
 
 1. postgis - This is the container that runs the postgres database. The actual database files are mapped outside the container as explained further below.
-1. gisapi - This is the NodeJS application that actually serves that vector tiles. It's based on [gisrestapi](https://github.com/OCHA-DAP/gisrestapi) which in turn was forked from https://github.com/spatialdev/PGRestAPI and slightly modified.
+1. gisapi - This is the NodeJS application that actually serves that vector tiles / PBF. It's based on [gisrestapi](https://github.com/OCHA-DAP/gisrestapi) which in turn was forked from https://github.com/spatialdev/PGRestAPI and slightly modified.
 1. ogr2ogr - This is a container that has everything needed to run the *ogr2ogr* command line tool. The container's image was actually created to hold a python application that manages/runs the transformations so it contains additional software not actually needed for this example.
+
+The gisapi server comes with a way of viewing the geodata from postgis as vector tile layers (described below). 
+To use the vector tiles / PBF in a separate web application with Leaflet we used the following plugin: https://github.com/SpatialServer/Leaflet.MapboxVectorTile
 
 ## Steps to get the stack up
 
@@ -37,7 +42,7 @@ This will create a total of 3 containers.
    
    NOTE: this creates a postgres user and database 
    
-1.  Restart the *gisapi* container so that it can connect to the newly created postgis db  
+1.  Restart the *gisapi* container so that it can connect to the newly created postgis db, **only needed the first time**  
     `docker-compose restart gisapi`
    
 1.  Import sample shapefile and geojson file into postgis. The *ogr2ogr/samples* folder in this
@@ -67,7 +72,7 @@ This will create a total of 3 containers.
     
  1. See the newly imported layers as vector tiles in a browser. 
  
-    **You might neeed to restart the gisapi container for the new tables to show up. This would not be needed if you'd try to directly access the PBF URLs**
+    **You might neeed to restart the gisapi container for the new tables to show up, see (4). This would not be needed if you'd try to directly access the PBF URLs**
     
     Go to [http://localhost:8888/services/tables](http://localhost:8888/services/tables) and click on the table name 
     that you would like to see. This will load a page with information about the selected table. In order to view the 
