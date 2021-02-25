@@ -8,7 +8,7 @@ with passwords that are hardcoded in this repo!**
 * docker - tested on version *20.10* , should work with *>17.04*
 * docker-compose - tested on version *1.25.5* , should work with *>1.11.2*
 
-NOTE: this was tested with Docker for Linux.
+NOTE: this was tested with Docker for Linux and Mac.
 
 ## Introduction 
 This will create a total of 3 containers.
