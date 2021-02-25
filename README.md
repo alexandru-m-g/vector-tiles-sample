@@ -42,9 +42,6 @@ This will create a total of 3 containers.
    
 1.  Import sample shapefile and geojson file into postgis. The *ogr2ogr/samples* folder in this
     project is mapped inside the *ogr2ogr* container and already contains 2 samples: 1 (unzipped) shapefile and 1 geojson. 
-    To try additional files one could just add them in this folder. 
-    Please note that the zipped **shapefiles need to be unzipped** before running the 
-    *ogr2ogr* import command.
     
     Example 1, shapefile:
     ```
@@ -63,6 +60,10 @@ This will create a total of 3 containers.
     # run the import from inside the container
     ogr2ogr --config PG_USE_COPY NO -f "PostgreSQL" "PG:host=postgis dbname=testdb port=5432 user=test password=test" /srv/samples/sample.geojson -nln sample_geojson -overwrite -lco OVERWRITE=YES -fieldTypeToString Real -t_srs EPSG:4326
     ```
+    
+    To try additional files one could just add them in the *ogr2ogr/samples* folder. 
+    Please note that the **zipped shapefiles need to be unzipped** before running the 
+    *ogr2ogr* import command.
     
  1. See the newly imported layers as vector tiles in a browser. 
  
