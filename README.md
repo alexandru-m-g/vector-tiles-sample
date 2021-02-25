@@ -10,6 +10,13 @@ with passwords that are hardcoded in this repo!**
 
 NOTE: this was tested with Docker for Linux.
 
+## Introduction 
+This will create a total of 3 containers.
+
+1. postgis - This is the container that runs the postgres database. The actual database files are mapped outside the container as explained further below.
+1. gisapi - This is the NodeJS application that actually serves that vector tiles. It's based on [gisrestapi](https://github.com/OCHA-DAP/gisrestapi) which in turn was forked from https://github.com/spatialdev/PGRestAPI and slightly modified.
+1. ogr2ogr - This is a container that has everything needed to run the *ogr2ogr* command line tool. The container's image was actually created to hold a python application that manages/runs the transformations so it contains additional software not actually needed for this example.
+
 ## Steps to get the stack up
 
 1. Clone this git repo
