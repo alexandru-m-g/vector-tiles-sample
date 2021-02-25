@@ -1,0 +1,27 @@
+version: "3.1"
+services:
+  gisapi:
+    image: unocha/hdx-gisrestapi:4.2.3
+    hostname: gisapi
+
+    # HACK to force OSM base maps (the old ones don't work anymore) before starting the Node server
+    entrypoint: /bin/bash -c "sed -i 's/tiles.mapbox.com\/v3\/examples.map-qfyrx5r8/tile.openstreetmap.org/' /srv/gisapi/endpoints/tables/views/table_vector_tiles.jade && node app.js"
+    volumes:
+      # Mapping the settings file for gisapi inside the container
+      - "./gisapi/settings:/srv/gisapi/settings"
+    ports:
+      - "8888:80"
+  postgis:
+    image: postgis/postgis:11-3.1-alpine
+    hostname: postgis
+    env_file:
+      - ./postgis/postgis.env
+    volumes:
+      - "${POSTGIS_DATA_HOST_FOLDER:-./postgres_data}:/var/lib/postgresql/data"
+  ogr2ogr:
+    image: unocha/hdx-gislayer:0.6.4
+    entrypoint: "tail -f /dev/null"
+    working_dir: /srv/samples
+    volumes:
+      # Mapping the samples inside the container so that ogr2ogr has access to them
+      - "./ogr2ogr/samples:/srv/samples"
