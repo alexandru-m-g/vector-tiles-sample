@@ -1,4 +1,4 @@
-# VECTOR TILES - SAMPLE STACK
+# VECTOR TILES - SAMPLE DOCKER STACK
 
 **Please do not use this as is in a production environment!  
 There are some sample database users that are being created by the steps below 
@@ -48,22 +48,28 @@ To use the vector tiles / PBF in a separate web application with Leaflet we used
 1.  Import sample shapefile and geojson file into postgis. The *ogr2ogr/samples* folder in this
     project is mapped inside the *ogr2ogr* container and already contains 2 samples: 1 (unzipped) shapefile and 1 geojson. 
     
-    Example 1, shapefile:
-    ```
+    In order to run the examples below you will need to be inside the *ogr2ogr* container:  
+    ```bash
     # get a shell inside the container
     docker-compose exec ogr2ogr /bin/sh
+    ```
     
+    Example 1, shapefile:
+    ```bash
     # run the import from inside the container
     ogr2ogr --config PG_USE_COPY NO -f "PostgreSQL" "PG:host=postgis dbname=testdb port=5432 user=test password=test" /srv/samples/sample_adm3.shp -nln sample_adm3_shp -overwrite -lco OVERWRITE=YES -fieldTypeToString Real -t_srs EPSG:4326
     ```
     
     Example 2, geojson:
-    ```
-    # get a shell inside the container
-    docker-compose exec ogr2ogr /bin/sh
-    
+    ```bash
     # run the import from inside the container
     ogr2ogr --config PG_USE_COPY NO -f "PostgreSQL" "PG:host=postgis dbname=testdb port=5432 user=test password=test" /srv/samples/sample.geojson -nln sample_geojson -overwrite -lco OVERWRITE=YES -fieldTypeToString Real -t_srs EPSG:4326
+    ```
+    
+    Example 3, shapefile:
+    ```bash
+    # run the import from inside the container
+    ogr2ogr --config PG_USE_COPY NO -f "PostgreSQL" "PG:host=postgis dbname=testdb port=5432 user=test password=test" /srv/samples/sample_adm1.shp -nln sample_adm1_shp -overwrite -lco OVERWRITE=YES -fieldTypeToString Real -t_srs EPSG:4326 -nlt MultiPolygon
     ```
     
     To try additional files one could just add them in the *ogr2ogr/samples* folder. 
@@ -85,5 +91,10 @@ The above *ogr2ogr* commands might not work on all shapefiles, geojson, etc. Oth
 be useful are:
 *   specifying MultiPolygon geometry type: `-nlt MultiPolygon`
 *   specifying MultiLineString geometry type: `-nlt MultiLineString`
+*   I haven't tested this, but it seems like ogr2ogr can automatically enable the above 2 options by using 
+    `-nlt PROMOTE_TO_MULTI`.
+    From the [ogr2ogr docs](https://gdal.org/programs/ogr2ogr.html) 
+    "PROMOTE_TO_MULTI can be used to automatically promote layers that mix polygon or multipolygons 
+    to multipolygons, and layers that mix linestrings or multilinestrings to multilinestrings"    
 *   forcing source SRS: `-s_srs EPSG:4326`
     
